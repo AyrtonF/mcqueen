@@ -33,6 +33,9 @@ RUN ./mvnw clean package -DskipTests
 RUN addgroup --system --gid 1001 mcqueen
 RUN adduser --system --uid 1001 --gid 1001 mcqueen
 
+# Criar diretório de dados e dar permissões antes de mudar usuário
+RUN mkdir -p /app/data && chown -R mcqueen:mcqueen /app/data
+
 # Copiar o JAR para um local acessível e dar permissões
 RUN cp target/*.jar app.jar && chown mcqueen:mcqueen app.jar
 
