@@ -1,0 +1,383 @@
+{
+  "info": {
+    "_postman_id": "mcqueen-email-service-v2",
+    "name": "Mcqueen Email Service API",
+    "description": "Coleção completa para testar todos os endpoints do Email Service.\n\nEsta coleção inclui:\n- Envio de emails com formulário\n- Consulta de histórico\n- Health checks\n- Exemplos de erros.\n\n",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "📤 Email Sending",
+      "item": [
+        {
+          "name": "Enviar Email - Formulário Multipart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('status');",
+                  "    pm.expect(jsonData).to.have.property('message');",
+                  "    pm.expect(jsonData).to.have.property('sendDate');",
+                  "    pm.expect(jsonData).to.have.property('recipient');",
+                  "});",
+                  "",
+                  "pm.test(\"Status is SUCCESS\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql(\"SUCCESS\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "organizationName",
+                  "value": "Secretaria da Saúde",
+                  "type": "text",
+                  "description": "Nome do órgão responsável"
+                },
+                {
+                  "key": "responsibleContact",
+                  "value": "responsavel@saude.pe.gov.br",
+                  "type": "text",
+                  "description": "Email do responsável pelo envio"
+                },
+                {
+                  "key": "subject",
+                  "value": "Dados de Saúde Pública",
+                  "type": "text",
+                  "description": "Tema principal dos dados"
+                },
+                {
+                  "key": "referencePeriod",
+                  "value": "2022-2024",
+                  "type": "text",
+                  "description": "Período de referência dos dados"
+                },
+                {
+                  "key": "dataDescription",
+                  "value": "Dados estatísticos de atendimentos hospitalares, incluindo informações sobre internações, consultas ambulatoriais e procedimentos cirúrgicos realizados no período de 2022 a 2024. Os dados foram coletados de todos os hospitais da rede pública estadual.",
+                  "type": "text",
+                  "description": "Descrição detalhada do conteúdo"
+                },
+                {
+                  "key": "lgpdCompliance",
+                  "value": "true",
+                  "type": "text",
+                  "description": "Confirmação de conformidade com LGPD"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": "/path/to/your/sample.csv",
+                  "description": "Arquivo CSV com os dados (SUBSTITUA PELO CAMINHO DO SEU ARQUIVO)"
+                },
+                {
+                  "key": "recipient",
+                  "value": "teste@exemplo.com",
+                  "type": "text",
+                  "description": "Email de destino (opcional)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/emails/send",
+              "host": ["{{base_url}}"],
+              "path": ["api", "emails", "send"]
+            },
+            "description": "Envia um email com dados do formulário e anexos CSV.\n\n**IMPORTANTE:** \n- Substitua o caminho do arquivo CSV por um arquivo real em seu sistema\n- Todos os parâmetros foram atualizados para inglês"
+          },
+          "response": [
+            {
+              "name": "Sucesso - Email Enviado",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "organizationName",
+                      "value": "Secretaria da Saúde",
+                      "type": "text"
+                    },
+                    {
+                      "key": "responsibleContact",
+                      "value": "responsavel@saude.pe.gov.br",
+                      "type": "text"
+                    },
+                    {
+                      "key": "subject",
+                      "value": "Dados de Saúde Pública",
+                      "type": "text"
+                    },
+                    {
+                      "key": "referencePeriod",
+                      "value": "2022-2024",
+                      "type": "text"
+                    },
+                    {
+                      "key": "dataDescription",
+                      "value": "Dados estatísticos de atendimentos hospitalares",
+                      "type": "text"
+                    },
+                    {
+                      "key": "lgpdCompliance",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "files",
+                      "type": "file",
+                      "src": "dados_saude.csv"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/emails/send",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "emails", "send"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Email enviado com sucesso\",\n  \"sendDate\": \"2025-10-06T10:30:00\",\n  \"recipient\": \"gabriel.almeida1@sad.pe.gov.br\",\n  \"fileCount\": 1,\n  \"fileNames\": [\"dados_saude.csv\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Enviar Email - JSON + Multipart",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "formData",
+                  "value": "{\n  \"organizationName\": \"Secretaria de Educação\",\n  \"responsibleContact\": \"educacao@pe.gov.br\",\n  \"subject\": \"Dados Educacionais\",\n  \"referencePeriod\": \"2023-2024\",\n  \"dataDescription\": \"Estatísticas de matrículas e aprovações nas escolas estaduais\",\n  \"lgpdCompliance\": true\n}",
+                  "type": "text",
+                  "contentType": "application/json"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": "/path/to/your/matriculas.csv",
+                  "description": "SUBSTITUA PELO CAMINHO DO SEU ARQUIVO"
+                },
+                {
+                  "key": "recipient",
+                  "value": "destino@exemplo.com",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/emails/send-json",
+              "host": ["{{base_url}}"],
+              "path": ["api", "emails", "send-json"]
+            },
+            "description": "Alternativa usando JSON para dados do formulário e multipart para arquivos"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Histórico e Consultas",
+      "item": [
+        {
+          "name": "Consultar Histórico Completo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/emails/history",
+              "host": ["{{base_url}}"],
+              "path": ["api", "emails", "history"]
+            },
+            "description": "Retorna todo o histórico de emails enviados"
+          }
+        },
+        {
+          "name": "Consultar Histórico - Filtrado por Data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/emails/history?startDate=2025-10-01T00:00:00&endDate=2025-10-31T23:59:59",
+              "host": ["{{base_url}}"],
+              "path": ["api", "emails", "history"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2025-10-01T00:00:00",
+                  "description": "Data de início (formato: yyyy-MM-ddTHH:mm:ss)"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2025-10-31T23:59:59",
+                  "description": "Data de fim (formato: yyyy-MM-ddTHH:mm:ss)"
+                }
+              ]
+            },
+            "description": "Consulta histórico filtrado por período específico"
+          }
+        },
+        {
+          "name": "Consultar Emails Recentes (24h)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/emails/recent",
+              "host": ["{{base_url}}"],
+              "path": ["api", "emails", "recent"]
+            },
+            "description": "Retorna emails enviados nas últimas 24 horas"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔧 Utilitários",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/emails/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "emails", "health"]
+            },
+            "description": "Verifica se o serviço está funcionando"
+          }
+        },
+        {
+          "name": "Swagger Documentation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/swagger-ui.html",
+              "host": ["{{base_url}}"],
+              "path": ["swagger-ui.html"]
+            },
+            "description": "Abre a documentação Swagger da API"
+          }
+        }
+      ]
+    },
+    {
+      "name": "❌ Testes de Erro",
+      "item": [
+        {
+          "name": "Erro - Campo Obrigatório Faltando",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "organizationName",
+                  "value": "Órgão Teste",
+                  "type": "text"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": "/path/to/test.csv"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/emails/send",
+              "host": ["{{base_url}}"],
+              "path": ["api", "emails", "send"]
+            },
+            "description": "Teste de erro quando campos obrigatórios estão faltando"
+          }
+        },
+        {
+          "name": "Erro - Arquivo Não CSV",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "organizationName",
+                  "value": "Órgão Teste",
+                  "type": "text"
+                },
+                {
+                  "key": "responsibleContact",
+                  "value": "teste@teste.com",
+                  "type": "text"
+                },
+                {
+                  "key": "subject",
+                  "value": "Teste",
+                  "type": "text"
+                },
+                {
+                  "key": "referencePeriod",
+                  "value": "2025",
+                  "type": "text"
+                },
+                {
+                  "key": "dataDescription",
+                  "value": "Teste de arquivo inválido",
+                  "type": "text"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": "/path/to/test.txt",
+                  "description": "Arquivo TXT para testar validação"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/emails/send",
+              "host": ["{{base_url}}"],
+              "path": ["api", "emails", "send"]
+            },
+            "description": "Teste de erro com arquivo que não é CSV"
+          }
+        }
+      ]
+    }
+  ]
+}

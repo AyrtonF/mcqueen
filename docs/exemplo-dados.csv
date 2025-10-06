@@ -1,0 +1,11 @@
+id,nome_paciente,data_atendimento,tipo_atendimento,codigo_cid,hospital
+1,João Silva,2024-01-15,Consulta,A15.9,Hospital Central
+2,Maria Santos,2024-01-16,Internação,I25.1,Hospital Norte
+3,Pedro Oliveira,2024-01-17,Cirurgia,K35.9,Hospital Sul
+4,Ana Costa,2024-01-18,Consulta,E11.9,Hospital Leste
+5,Carlos Ferreira,2024-01-19,Emergência,S72.0,Hospital Central
+6,Lucia Almeida,2024-01-20,Consulta,M79.3,Hospital Norte
+7,Roberto Lima,2024-01-21,Internação,J18.9,Hospital Sul
+8,Sandra Rocha,2024-01-22,Cirurgia,N20.0,Hospital Leste
+9,Felipe Souza,2024-01-23,Consulta,H25.9,Hospital Central
+10,Patricia Gomes,2024-01-24,Emergência,G93.1,Hospital Norte
