@@ -18,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -140,5 +141,17 @@ public class EmailController {
     @ApiResponse(responseCode = "200", description = "Serviço funcionando normalmente")
     public ResponseEntity<String> healthCheck() {
         return ResponseEntity.ok("Serviço de email funcionando normalmente");
+    }
+
+    /**
+     * Endpoint raiz - redireciona para documentação Swagger
+     */
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @Operation(summary = "Página inicial", description = "Redireciona para a documentação da API")
+    @ApiResponse(responseCode = "302", description = "Redirecionamento para Swagger UI")
+    public ResponseEntity<Void> home() {
+        return ResponseEntity.status(302)
+                .header("Location", "/swagger-ui/index.html")
+                .build();
     }
 }
