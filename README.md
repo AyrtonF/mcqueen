@@ -7,7 +7,7 @@
 
 ## 📋 Descrição
 
-O **Mcqueen** é um serviço RESTful desenvolvido em Spring Boot para envio de emails contendo dados de formulários e anexos CSV. Foi projetado especificamente para atender às necessidades de órgãos governamentais que precisam enviar dados estruturados via email de forma segura e auditável.
+O **Mcqueen** é um serviço RESTful desenvolvido em Spring Boot para envio de emails contendo dados de formulários e anexos CSV. O sistema oferece uma API robusta para integração com aplicações que necessitam de funcionalidades de envio de email com anexos de forma segura e auditável.
 
 ## ✨ Características Principais
 
@@ -61,6 +61,8 @@ src/main/java/com/join/Mcqueen/
    ```properties
    spring.mail.username=seu-email@dominio.com
    spring.mail.password=sua-senha
+   spring.mail.host=smtp.servidor.com
+   spring.mail.port=587
    ```
 
 3. **Execute a aplicação:**
@@ -83,27 +85,17 @@ src/main/java/com/join/Mcqueen/
 
 2. **Execute o container:**
    ```bash
-   docker run -p 8080:8080 mcqueen-email-service
+   docker run -p 8080:8080 \
+     -e SPRING_MAIL_USERNAME=seu-email@dominio.com \
+     -e SPRING_MAIL_PASSWORD=sua-senha \
+     mcqueen-email-service
    ```
-
-### Deploy no Render
-
-1. **Configure as variáveis de ambiente no Render:**
-
-   ```
-   SPRING_MAIL_USERNAME=gabriel.almeida1@sad.pe.gov.br
-   SPRING_MAIL_PASSWORD=86116123
-   SPRING_MAIL_HOST=smtps.expresso.pe.gov.br
-   SPRING_MAIL_PORT=587
-   ```
-
-2. **Use o Dockerfile** para build automático no Render
 
 ## 📡 Endpoints da API
 
 ### 🔗 Endpoint Principal
 
-#### `POST /api/emails/enviar`
+#### `POST /api/emails/send`
 
 Envia email com dados do formulário e anexos CSV.
 
@@ -111,27 +103,27 @@ Envia email com dados do formulário e anexos CSV.
 
 **Parâmetros:**
 
-- `nomeOrgao` (string, obrigatório): Nome do órgão responsável
-- `contatoResponsavel` (string, obrigatório): Email do responsável
-- `tema` (string, obrigatório): Tema do formulário
-- `periodoReferencia` (string, obrigatório): Período dos dados (ex: 2022-2024)
-- `descricaoDado` (string, obrigatório): Descrição detalhada
-- `conformidadeLGPD` (boolean): Confirmação LGPD
-- `arquivos` (files, obrigatório): Um ou mais arquivos CSV
-- `destinatario` (string, opcional): Email de destino
+- `organizationName` (string, obrigatório): Nome da organização
+- `responsibleContact` (string, obrigatório): Email do responsável
+- `subject` (string, obrigatório): Assunto do formulário
+- `referencePeriod` (string, obrigatório): Período dos dados
+- `dataDescription` (string, obrigatório): Descrição detalhada
+- `lgpdCompliance` (boolean): Confirmação LGPD
+- `files` (files, obrigatório): Um ou mais arquivos CSV
+- `recipient` (string, opcional): Email de destino
 
 ### 🔗 Endpoints de Consulta
 
-#### `GET /api/emails/historico`
+#### `GET /api/emails/history`
 
 Consulta histórico de emails enviados.
 
 **Parâmetros opcionais:**
 
-- `inicio`: Data início (yyyy-MM-ddTHH:mm:ss)
-- `fim`: Data fim (yyyy-MM-ddTHH:mm:ss)
+- `startDate`: Data início (yyyy-MM-ddTHH:mm:ss)
+- `endDate`: Data fim (yyyy-MM-ddTHH:mm:ss)
 
-#### `GET /api/emails/recentes`
+#### `GET /api/emails/recent`
 
 Retorna emails enviados nas últimas 24 horas.
 
@@ -144,31 +136,33 @@ Health check do serviço.
 ### Usando cURL
 
 ```bash
-curl -X POST http://localhost:8080/api/emails/enviar \
+curl -X POST http://localhost:8080/api/emails/send \
   -H "Content-Type: multipart/form-data" \
-  -F "nomeOrgao=Secretaria da Saúde" \
-  -F "contatoResponsavel=responsavel@saude.pe.gov.br" \
-  -F "tema=Dados de Saúde Pública" \
-  -F "periodoReferencia=2022-2024" \
-  -F "descricaoDado=Dados estatísticos de atendimentos hospitalares" \
-  -F "conformidadeLGPD=true" \
-  -F "arquivos=@dados1.csv" \
-  -F "arquivos=@dados2.csv"
+  -F "organizationName=Exemplo Org" \
+  -F "responsibleContact=responsavel@exemplo.com" \
+  -F "subject=Dados Exemplo" \
+  -F "referencePeriod=2024-2025" \
+  -F "dataDescription=Descrição dos dados exemplo" \
+  -F "lgpdCompliance=true" \
+  -F "files=@dados1.csv" \
+  -F "files=@dados2.csv"
 ```
 
 ### Usando Postman
 
-Consulte o arquivo `docs/postman-collection.json` para importar a coleção completa.
+Consulte o arquivo `docs/postman-collection-updated.json` para importar a coleção completa.
 
 ## 🔧 Configuração
 
 ### SMTP
 
-O serviço está configurado para usar o servidor SMTP do Expresso PE:
+Configure o servidor SMTP no arquivo `application.properties`:
 
 ```properties
-spring.mail.host=smtps.expresso.pe.gov.br
+spring.mail.host=smtp.servidor.com
 spring.mail.port=587
+spring.mail.username=usuario@dominio.com
+spring.mail.password=senha
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 ```
@@ -187,8 +181,8 @@ Por padrão, usa H2 em memória para auditoria. Para produção, configure um ba
 ```properties
 # PostgreSQL (exemplo)
 spring.datasource.url=jdbc:postgresql://localhost:5432/mcqueen
-spring.datasource.username=usuario
-spring.datasource.password=senha
+spring.datasource.username=db_user
+spring.datasource.password=db_password
 spring.jpa.hibernate.ddl-auto=update
 ```
 
@@ -220,10 +214,10 @@ A API retorna erros padronizados no formato:
 {
   "status": 400,
   "error": "Validation Error",
-  "message": "Dados inválidos no formulário",
-  "path": "/api/emails/enviar",
+  "message": "Invalid form data",
+  "path": "/api/emails/send",
   "timestamp": "2025-10-06T10:30:00",
-  "details": ["nomeOrgao: não pode estar vazio"]
+  "details": ["organizationName: cannot be empty"]
 }
 ```
 
@@ -248,12 +242,11 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 ## 👥 Equipe
 
 - **Ayrton** - Desenvolvimento principal
-- **Gabriel Almeida** - Configuração SMTP e Deploy
 
 ## 📞 Suporte
 
-Para suporte, entre em contato através do email: gabriel.almeida1@sad.pe.gov.br
+Para suporte, abra uma issue no repositório do projeto.
 
 ---
 
-**Desenvolvido com ❤️ para o Governo de Pernambuco**
+**Desenvolvido com ❤️ em Spring Boot**
