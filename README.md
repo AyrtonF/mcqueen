@@ -62,7 +62,7 @@ src/main/java/com/join/Mcqueen/
    spring.mail.username=seu-email@dominio.com
    spring.mail.password=sua-senha
    spring.mail.host=smtp.servidor.com
-   spring.mail.port=587
+   spring.mail.port=port
    ```
 
 3. **Execute a aplicação:**
@@ -239,14 +239,8 @@ A API retorna erros padronizados no formato:
 
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
-## 👥 Equipe
-
-- **Ayrton** - Desenvolvimento principal
-
 ## 📞 Suporte
 
 Para suporte, abra uma issue no repositório do projeto.
 
 ---
-
-**Desenvolvido com ❤️ em Spring Boot**
