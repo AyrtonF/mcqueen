@@ -239,14 +239,8 @@ A API retorna erros padronizados no formato:
 
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
-## 👥 Equipe
-
-- **Ayrton** - Desenvolvimento principal
-
 ## 📞 Suporte
 
 Para suporte, abra uma issue no repositório do projeto.
 
 ---
-
-**Desenvolvido com ❤️ em Spring Boot**
