@@ -3,8 +3,9 @@ target/
 .git
 .gitignore
 *.md
+README.md
+docs/
 .mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/maven-wrapper.properties
 
 # IDE
 .idea/

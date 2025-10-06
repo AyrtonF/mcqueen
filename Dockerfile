@@ -17,6 +17,9 @@ COPY pom.xml .
 # Dar permissão de execução para o Maven wrapper
 RUN chmod +x ./mvnw
 
+# Instalar curl para health check
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 # Baixar dependências (cache layer)
 RUN ./mvnw dependency:go-offline -B
 
@@ -30,6 +33,9 @@ RUN ./mvnw clean package -DskipTests
 RUN addgroup --system --gid 1001 mcqueen
 RUN adduser --system --uid 1001 --gid 1001 mcqueen
 
+# Copiar o JAR para um local acessível e dar permissões
+RUN cp target/*.jar app.jar && chown mcqueen:mcqueen app.jar
+
 # Mudar para o usuário não-root
 USER mcqueen
 
@@ -40,7 +46,7 @@ EXPOSE 8080
 ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=70.0 -XX:+UseG1GC -XX:+UseStringDeduplication"
 
 # Comando para executar a aplicação
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar target/*.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=prod -jar app.jar"]
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
