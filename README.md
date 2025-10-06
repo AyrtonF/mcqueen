@@ -62,7 +62,7 @@ src/main/java/com/join/Mcqueen/
    spring.mail.username=seu-email@dominio.com
    spring.mail.password=sua-senha
    spring.mail.host=smtp.servidor.com
-   spring.mail.port=587
+   spring.mail.port=port
    ```
 
 3. **Execute a aplicação:**
