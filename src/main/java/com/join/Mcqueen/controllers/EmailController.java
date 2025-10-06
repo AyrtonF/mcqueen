@@ -29,7 +29,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/emails")
+@RequestMapping("/emails")
 @RequiredArgsConstructor
 @Tag(name = "Email Controller", description = "Endpoints para envio de emails com formulários e anexos CSV")
 public class EmailController {
@@ -143,15 +143,5 @@ public class EmailController {
         return ResponseEntity.ok("Serviço de email funcionando normalmente");
     }
 
-    /**
-     * Endpoint raiz - redireciona para documentação Swagger
-     */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    @Operation(summary = "Página inicial", description = "Redireciona para a documentação da API")
-    @ApiResponse(responseCode = "302", description = "Redirecionamento para Swagger UI")
-    public ResponseEntity<Void> home() {
-        return ResponseEntity.status(302)
-                .header("Location", "/swagger-ui/index.html")
-                .build();
-    }
+
 }
